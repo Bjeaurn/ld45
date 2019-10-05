@@ -40,7 +40,7 @@ export function checkCollission(e1: any, entities: any[]) {
 }
 
 export function xyToDegrees(dx: number, dy: number): number {
-	const rad = Math.atan2(dx, -dy)
+	const rad = Math.atan2(dx, dy)
 	return rad * (180 / Math.PI)
 }
 

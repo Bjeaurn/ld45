@@ -14,11 +14,19 @@ const cfg: Config = new Config(
 const game = new Gine(cfg)
 const assets: BasicAsset[] = [
 	{ name: 'grass', src: 'grass.png' },
-	{ name: 'bear-cub', src: 'bear-cub.png' },
 	{ name: 'tree', src: 'tree.png' }
 ]
 assets.forEach(d => {
 	Gine.store.image(d.name, d.src)
+})
+
+Gine.store.sprite('bear-cub', 'bear-cub-sprite.png', {
+	widthPerImage: 18,
+	heightPerImage: 22,
+	imagesPerRow: 6,
+	numberOfFrames: 7,
+	ticksPerFrame: 10,
+	frameIndex: 0
 })
 
 Gine.store.sprite('bunny', 'bunny-sprite.png', {

@@ -1,10 +1,10 @@
-import { Gine, ImageAsset, KEYCODES, Math2D } from 'gine'
+import { Gine, KEYCODES, Math2D, SpriteAsset } from 'gine'
 
 import { Entity } from './entity'
-import { xyToDegrees } from './util'
+import { rotateSprite, xyToDegrees } from './util'
 
 export class Player extends Entity {
-	image: ImageAsset
+	image: SpriteAsset
 	isColliding: boolean = false
 	private moveSpeed: number = 35
 	private direction: number = 0
@@ -18,9 +18,9 @@ export class Player extends Entity {
 
 	constructor(public x: number, public y: number) {
 		super()
-		this.image = Gine.store.getImage('bear-cub')!
-		this.width = this.image.image.width
-		this.height = this.image.image.height
+		this.image = Gine.store.getSprite('bear-cub')!
+		this.width = this.image.sizeX
+		this.height = this.image.sizeY
 	}
 
 	tick(delta: number) {
@@ -30,6 +30,13 @@ export class Player extends Entity {
 				this.attackIsDelayed = false
 				this.attackDelayTime = 0
 			}
+		}
+
+		if (this.attackDelayTime > 0) {
+			console.log('updating')
+			this.image.update()
+		} else {
+			this.image.currentSpriteIndex = 0
 		}
 	}
 
@@ -54,7 +61,7 @@ export class Player extends Entity {
 			vector.x -= delta * this.moveSpeed
 		}
 		if (vector.x !== 0 || vector.y !== 0) {
-			this.direction = xyToDegrees(vector.x, vector.y)
+			this.direction = xyToDegrees(vector.x, -vector.y)
 		}
 		this.x += vector.x
 		this.y += vector.y
@@ -81,7 +88,7 @@ export class Player extends Entity {
 	}
 
 	draw() {
-		Math2D.rotate(this.image, 300, 200, this.direction)
+		rotateSprite(this.image, 300, 200, this.direction)
 		// Gine.handle.handle.strokeRect(this.x, this.y, this.width, this.height)
 		// Gine.handle.handle.beginPath()
 		// Gine.handle.handle.ellipse(

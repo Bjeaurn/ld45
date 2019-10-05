@@ -21,9 +21,11 @@ export class MainScene extends Scene {
 			y: Gine.CONFIG.height / 2
 		}
 		this.enemies.push(
-			new Bunny(120, 120),
-			new Bunny(138, 118),
-			new Bunny(115, 100)
+			new Bunny(Math.random() * 1200, Math.random() * 1200),
+			new Bunny(Math.random() * 1200, Math.random() * 1200),
+			new Bunny(Math.random() * 1200, Math.random() * 1200),
+			new Bunny(Math.random() * 1200, Math.random() * 1200),
+			new Bunny(Math.random() * 1200, Math.random() * 1200)
 		)
 	}
 

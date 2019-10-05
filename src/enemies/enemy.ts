@@ -4,7 +4,6 @@ import { Entity } from '../entity'
 
 export class Enemy extends Entity {
 	health: number = 1
-	image?: ImageAsset | SpriteAsset
 	direction: number = 0
 	constructor(
 		public x: number,

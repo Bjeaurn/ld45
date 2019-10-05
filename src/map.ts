@@ -35,7 +35,7 @@ export class Map {
 		this.boundaries = {
 			width: Gine.CONFIG.width,
 			height: Gine.CONFIG.height,
-			tileSize: Gine.CONFIG.tileSize
+			tileSize: Gine.CONFIG.tileSize * 2
 		}
 	}
 
@@ -52,10 +52,10 @@ export class Map {
 		trees
 			.filter(
 				t =>
-					t.x >= x - this.boundaries.width - this.boundaries.tileSize * 2 &&
-					t.x <= x + this.boundaries.width + this.boundaries.tileSize * 2 &&
-					t.y >= y - this.boundaries.height - this.boundaries.tileSize * 2 &&
-					t.y <= y + this.boundaries.height + this.boundaries.tileSize * 2
+					t.x >= x - this.boundaries.width - this.boundaries.tileSize &&
+					t.x <= x + this.boundaries.width + this.boundaries.tileSize &&
+					t.y >= y - this.boundaries.height - this.boundaries.tileSize &&
+					t.y <= y + this.boundaries.height + this.boundaries.tileSize
 			)
 			.forEach(t => {
 				Gine.handle.draw(
