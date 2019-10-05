@@ -55,7 +55,15 @@ export class MainScene extends Scene {
 				const targets = checkCollission(
 					this.player,
 					this.enemies.filter(e => !e.alive)
-				)
+				).sort((a, b) => {
+					const ax = a.x - this.player.x
+					const bx = b.x - this.player.x
+					const ay = a.y - this.player.y
+					const by = b.y - this.player.y
+					const distanceA = Math.sqrt(ax * ax + ay * ay)
+					const distanceB = Math.sqrt(bx * bx + by * by)
+					return distanceA - distanceB
+				})
 				if (targets.length > 0) {
 					this.player.carry(targets[0])
 				}
