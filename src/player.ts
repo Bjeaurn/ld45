@@ -1,22 +1,25 @@
 import { Gine, KEYCODES, Math2D, SpriteAsset } from 'gine'
 
+import { Enemy } from './enemies'
 import { Entity } from './entity'
 import { rotateSprite, xyToDegrees } from './util'
 
 export class Player extends Entity {
 	image: SpriteAsset
 	isColliding: boolean = false
-	private moveSpeed: number = 35
-	private direction: number = 0
-	private dirArr: number[] = []
-	private actionTime: number = 0
+	public stamina: number = 1
 	public isCarrying: number = 0
 	public isAttacking: boolean = false
+
+	private moveSpeed: number = 35
+	private direction: number = 0
+	private actionTime: number = 0
 	private attackDelayTime: number = 0
 	private attackDelay: number = 600
 	private attackIsDelayed: boolean = false
 	private attackSpeed: number = 700
 	private carrying?: any
+
 	constructor(public x: number, public y: number) {
 		super()
 		this.image = Gine.store.getSprite('bear-cub')!
@@ -25,6 +28,13 @@ export class Player extends Entity {
 	}
 
 	tick(delta: number) {
+		if (this.actionTime > 0) {
+			this.actionTime -= delta
+		}
+		if (this.actionTime < 0) {
+			this.actionTime = 0
+		}
+		// console.log(this.stamina)
 		this.handleKeyboard(delta)
 		if (this.attackIsDelayed) {
 			if (Date.now() >= this.attackDelayTime + this.attackDelay) {
@@ -48,20 +58,29 @@ export class Player extends Entity {
 		}
 		this.isAttacking = false
 		const vector = { x: 0, y: 0 }
+		const vectorSpeed = (this.moveSpeed / 2) * (2 * this.stamina + 1) * delta
 		if (Gine.keyboard.allPressed()[KEYCODES.W]) {
-			vector.y -= delta * this.moveSpeed
+			vector.y -= vectorSpeed
 		}
 		if (Gine.keyboard.allPressed()[KEYCODES.D]) {
-			vector.x += delta * this.moveSpeed
+			vector.x += vectorSpeed
 		}
 		if (Gine.keyboard.allPressed()[KEYCODES.S]) {
-			vector.y += delta * this.moveSpeed
+			vector.y += vectorSpeed
 		}
 		if (Gine.keyboard.allPressed()[KEYCODES.A]) {
-			vector.x -= delta * this.moveSpeed
+			vector.x -= vectorSpeed
 		}
 		if (vector.x !== 0 || vector.y !== 0) {
+			if (this.stamina > 0) {
+				this.stamina -= delta * 0.01
+			} else {
+				this.stamina = 0
+			}
 			this.direction = xyToDegrees(vector.x, -vector.y)
+		} else {
+			this.stamina += delta / 32
+			if (this.stamina > 1) this.stamina = 1
 		}
 		this.x += vector.x
 		this.y += vector.y
@@ -76,22 +95,32 @@ export class Player extends Entity {
 	}
 
 	attack(delta: number) {
-		if (!this.attackIsDelayed) {
-			const xy = Math2D.degreesToXY(this.direction)
-			this.x += xy.x * delta * this.attackSpeed
-			this.y += xy.y * delta * this.attackSpeed
-			this.isAttacking = true
+		if (this.isCarrying) {
+			// Eat it!
+			this.eat(this.carrying)
 			this.setAttackDelay()
+		} else {
+			if (!this.attackIsDelayed && this.stamina >= delta) {
+				const xy = Math2D.degreesToXY(this.direction)
+				this.x += xy.x * delta * this.attackSpeed
+				this.y += xy.y * delta * this.attackSpeed
+				this.isAttacking = true
+				this.setAttackDelay()
+				this.stamina -= delta
+			}
 		}
 	}
 
-	canDoAction(delta: number): boolean {
-		if (this.actionTime > 0) {
-			this.actionTime -= delta
+	eat(entity: Enemy) {
+		if (entity.lifePoints) {
+			this.stamina += entity.lifePoints
+			if (this.stamina > 1) this.stamina = 1
+			entity.consume()
 		}
-		if (this.actionTime < 0) {
-			this.actionTime = 0
-		}
+		this.drop()
+	}
+
+	canDoAction(): boolean {
 		return this.actionTime === 0
 	}
 
@@ -99,7 +128,7 @@ export class Player extends Entity {
 		this.actionTime = 0.2
 	}
 
-	carry(entity: any) {
+	carry(entity: Enemy) {
 		if (!this.carrying) {
 			entity.x = this.x
 			entity.y = this.y

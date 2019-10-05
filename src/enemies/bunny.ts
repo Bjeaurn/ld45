@@ -10,13 +10,14 @@ export class Bunny extends Enemy {
 	moveSpeed: number = Math.random() * 15 + 10
 	direction: number = 90
 	constructor(public x: number, public y: number) {
-		super(x, y, Gine.store.getSprite('bunny'))
+		super(x, y, Gine.store.getSprite('bunny')!)
 	}
 	status: BunnyBehaviors = 'hopping'
 	delay: number = 0
 	lastActionTime: number = 0
 
 	update(delta: number) {
+		this.ebtn.update()
 		if (!this.alive) {
 			return
 		}
@@ -53,6 +54,9 @@ export class Bunny extends Enemy {
 
 	draw(x: number, y: number) {
 		// Math2D.rotate(this.image, this.x, this.y, this.direction)
+		if (!this.alive && this.image) {
+			Gine.handle.drawSprite(this.ebtn, this.x - x - 8, this.y - y - 20)
+		}
 		if (this.image && this.image.type === Asset.SPRITE) {
 			this.image.draw()
 			rotateSprite(

@@ -33,15 +33,10 @@ export class MainScene extends Scene {
 		delta = +delta.toFixed(4)
 		if (this.player.isAttacking) {
 			checkCollission(this.player, this.enemies.filter(e => e.alive)).forEach(
-				enemy => {
-					enemy.hit()
-				}
+				enemy => enemy.hit()
 			)
 		}
-		if (
-			this.player.canDoAction(delta) &&
-			Gine.keyboard.allPressed()[KEYCODES.E]
-		) {
+		if (this.player.canDoAction() && Gine.keyboard.allPressed()[KEYCODES.E]) {
 			if (this.player.isCarrying === 0) {
 				const targets = checkCollission(
 					this.player,
@@ -77,8 +72,11 @@ export class MainScene extends Scene {
 
 	second() {
 		// Fun little trick to play with the weather
-		this.map.weather++
-		if (this.map.weather > 3) this.map.weather = 0
+		// this.map.weather++
+		// if (this.map.weather > 3) this.map.weather = 0
+		this.enemies.forEach((e, i) => {
+			if (!e.alive && e.lifePoints === 0) this.enemies.splice(i, 1)
+		})
 	}
 
 	init() {}

@@ -26,7 +26,7 @@ export class Map {
 	totalHeight: number
 	grass: SpriteAsset
 	tree: SpriteAsset
-	weather: number = 1
+	weather: number = 0
 	boundaries: { width: number; height: number; tileSize: number }
 	constructor() {
 		this.totalWidth = Gine.CONFIG.width / (Gine.CONFIG.tileSize / 2)

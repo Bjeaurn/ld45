@@ -33,6 +33,12 @@ Gine.store.sprite('bear-cub', 'bear-cub-sprite.png', {
 	frameIndex: 0
 })
 
+Gine.store.sprite(
+	'e-button',
+	'e-button-sprite.png',
+	new SpriteOptions(16, 16, 4, 4, 64)
+)
+
 Gine.store.sprite('bunny', 'bunny-sprite.png', {
 	widthPerImage: 11,
 	heightPerImage: 15,
