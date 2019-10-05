@@ -12,17 +12,28 @@ const cfg: Config = new Config(
 )
 
 const game = new Gine(cfg)
-const assets: BasicAsset[] = [{ name: 'logo', src: 'logo.png' }]
+const assets: BasicAsset[] = [
+	{ name: 'grass', src: 'grass.png' },
+	{ name: 'bear-cub', src: 'bear-cub.png' },
+	{ name: 'tree', src: 'tree.png' }
+]
 assets.forEach(d => {
 	Gine.store.image(d.name, d.src)
 })
-Gine.store.sprite('player', 'spritesheet-example.png', {
-	widthPerImage: 64,
-	heightPerImage: 64,
+
+Gine.store.sprite('bunny', 'bunny-sprite.png', {
+	widthPerImage: 11,
+	heightPerImage: 15,
 	imagesPerRow: 5,
-	numberOfFrames: 9,
-	ticksPerFrame: 24
+	numberOfFrames: 2
 } as SpriteOptions)
+// Gine.store.sprite('player', 'spritesheet-example.png', {
+// 	widthPerImage: 32,
+// 	heightPerImage: 32,
+// 	imagesPerRow: 5,
+// 	numberOfFrames: 9,
+// 	ticksPerFrame: 24
+// } as SpriteOptions)
 
 const mainScene = new MainScene()
 game.changeScene(mainScene)

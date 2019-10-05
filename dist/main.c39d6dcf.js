@@ -15968,7 +15968,28 @@ __export(require("./gine/store"));
 __export(require("./gine/keyboard.keycodes"));
 __export(require("./gine/math"));
 
-},{"./gine/config":"../node_modules/gine/dist/gine/config.js","./gine/core":"../node_modules/gine/dist/gine/core.js","./gine/canvas":"../node_modules/gine/dist/gine/canvas.js","./gine/handle":"../node_modules/gine/dist/gine/handle.js","./gine/camera":"../node_modules/gine/dist/gine/camera.js","./gine/image":"../node_modules/gine/dist/gine/image.js","./gine/keyboard":"../node_modules/gine/dist/gine/keyboard.js","./gine/mouse":"../node_modules/gine/dist/gine/mouse.js","./gine/text":"../node_modules/gine/dist/gine/text.js","./gine/tile":"../node_modules/gine/dist/gine/tile.js","./gine/scene":"../node_modules/gine/dist/gine/scene.js","./gine/store":"../node_modules/gine/dist/gine/store.js","./gine/keyboard.keycodes":"../node_modules/gine/dist/gine/keyboard.keycodes.js","./gine/math":"../node_modules/gine/dist/gine/math/index.js"}],"scenes/loading.ts":[function(require,module,exports) {
+},{"./gine/config":"../node_modules/gine/dist/gine/config.js","./gine/core":"../node_modules/gine/dist/gine/core.js","./gine/canvas":"../node_modules/gine/dist/gine/canvas.js","./gine/handle":"../node_modules/gine/dist/gine/handle.js","./gine/camera":"../node_modules/gine/dist/gine/camera.js","./gine/image":"../node_modules/gine/dist/gine/image.js","./gine/keyboard":"../node_modules/gine/dist/gine/keyboard.js","./gine/mouse":"../node_modules/gine/dist/gine/mouse.js","./gine/text":"../node_modules/gine/dist/gine/text.js","./gine/tile":"../node_modules/gine/dist/gine/tile.js","./gine/scene":"../node_modules/gine/dist/gine/scene.js","./gine/store":"../node_modules/gine/dist/gine/store.js","./gine/keyboard.keycodes":"../node_modules/gine/dist/gine/keyboard.keycodes.js","./gine/math":"../node_modules/gine/dist/gine/math/index.js"}],"entity.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Entity =
+/** @class */
+function () {
+  function Entity() {
+    this.width = 0;
+    this.height = 0;
+    this.x = 0;
+    this.y = 0;
+  }
+
+  return Entity;
+}();
+
+exports.Entity = Entity;
+},{}],"enemies/enemy.ts":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -16003,95 +16024,128 @@ Object.defineProperty(exports, "__esModule", {
 
 var gine_1 = require("gine");
 
-var LoadingScene =
+var entity_1 = require("../entity");
+
+var Enemy =
 /** @class */
 function (_super) {
-  __extends(LoadingScene, _super);
+  __extends(Enemy, _super);
 
-  function LoadingScene() {
+  function Enemy(x, y, image) {
     var _this = _super.call(this) || this;
 
-    _this.x = 0;
-    _this.y = 0;
-    _this.spriteX = 200;
-    _this.spriteY = 200;
-    _this.directionX = 1;
-    _this.directionY = 1;
-    _this.count = 0;
-    _this.moveSpeed = 50;
-    _this.image = gine_1.Gine.store.get('logo');
-    _this.test = gine_1.Gine.store.get('player');
+    _this.x = x;
+    _this.y = y;
+    _this.image = image;
+    _this.health = 1;
+    _this.direction = 0;
+
+    if (_this.image) {
+      _this.width = _this.image.image.width;
+      _this.height = _this.image.image.height;
+    }
+
     return _this;
   }
 
-  LoadingScene.prototype.tick = function (delta) {
-    if (this.x > gine_1.Gine.CONFIG.width - this.image.width) {
-      this.directionX = 0;
-    } else if (this.x < 0) {
-      this.directionX = 1;
+  Enemy.prototype.update = function (delta) {};
+
+  Enemy.prototype.draw = function () {
+    if (this.image) {
+      // Gine.handle.handle.drawImage(this.image.image, this.x, this.y)
+      gine_1.Math2D.rotate(this.image, this.x, this.y, this.direction); // Gine.handle.handle.strokeRect(this.x, this.y, this.width, this.height)
+      // Gine.handle.handle.beginPath()
+      // Gine.handle.handle.ellipse(
+      // 	this.x,
+      // 	this.y,
+      // 	this.width / 2,
+      // 	this.width / 2,
+      // 	this.direction,
+      // 	0,
+      // 	2 * Math.PI
+      // )
+      // Gine.handle.handle.stroke()
     }
-
-    if (this.directionX === 1) {
-      this.x++;
-    } else {
-      this.x--;
-    }
-
-    if (this.y > gine_1.Gine.CONFIG.height - this.image.height) {
-      this.directionY = 0;
-    } else if (this.y < 0) {
-      this.directionY = 1;
-    }
-
-    if (this.directionY === 1) {
-      this.y++;
-    } else {
-      this.y--;
-    }
-
-    if (this.count > 1000) {
-      // this.destroy()
-      this.count = 0;
-    }
-
-    if (gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.A] || gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.S] || gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.D] || gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.W]) {
-      if (gine_1.Gine.keyboard.isPressed(gine_1.KEYCODES.A)) {
-        this.spriteX -= this.moveSpeed * delta;
-      }
-
-      if (gine_1.Gine.keyboard.isPressed(gine_1.KEYCODES.D)) {
-        this.spriteX += this.moveSpeed * delta;
-      }
-
-      if (gine_1.Gine.keyboard.isPressed(gine_1.KEYCODES.W)) {
-        this.spriteY -= this.moveSpeed * delta;
-      }
-
-      if (gine_1.Gine.keyboard.isPressed(gine_1.KEYCODES.S)) {
-        this.spriteY += this.moveSpeed * delta;
-      }
-    }
-
-    if (gine_1.Gine.mouse.isMouseDown) {
-      var pos = gine_1.Gine.mouse.lastClick();
-      this.spriteX = pos.x;
-      this.spriteY = pos.y;
-    }
-
-    this.test.update();
   };
 
-  LoadingScene.prototype.frame = function () {
-    gine_1.Gine.handle.draw(gine_1.Gine.store.get('logo'), this.x, this.y);
-    gine_1.Gine.handle.drawSprite(this.test, this.spriteX, this.spriteY);
-    this.count++;
-  };
+  return Enemy;
+}(entity_1.Entity);
 
-  return LoadingScene;
-}(gine_1.Scene);
+exports.Enemy = Enemy;
+},{"gine":"../node_modules/gine/dist/index.js","../entity":"entity.ts"}],"util.ts":[function(require,module,exports) {
+"use strict";
 
-exports.LoadingScene = LoadingScene;
-},{"gine":"../node_modules/gine/dist/index.js"}],"scenes/main.ts":[function(require,module,exports) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var gine_1 = require("gine");
+
+var halfTile = 32 / 2;
+
+function boxCollission(e1, e2) {
+  if (e1.x && e1.y && e1.width && e1.height && e2.x && e2.y && e2.width && e2.height) {
+    return e1.x - e1.width / 2 < e2.x + e2.width / 2 && // a
+    e1.x + e1.width / 2 > e2.x - e2.width / 2 && // b
+    e1.y - e1.height / 2 < e2.y + e2.height / 2 && // c
+    e1.y + e1.height / 2 > e2.y - e2.height / 2 // d
+    ;
+  }
+
+  return false;
+}
+
+exports.boxCollission = boxCollission;
+
+function circleCollission(e1, e2) {
+  if (e1.x && e2.x && e1.y && e2.y && e1.width && e2.width) {
+    var dx = e1.x - e2.x;
+    var dy = e1.y - e2.y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+    return distance < e1.width / 2 + e2.width / 2;
+  }
+
+  return false;
+}
+
+exports.circleCollission = circleCollission;
+
+function checkCollission(e1, entities) {
+  return entities.filter(function (e2) {
+    return circleCollission(e1, e2);
+  });
+}
+
+exports.checkCollission = checkCollission;
+
+function xyToDegrees(dx, dy) {
+  var rad = Math.atan2(dx, -dy);
+  return rad * (180 / Math.PI);
+}
+
+exports.xyToDegrees = xyToDegrees;
+
+function rotateSprite(image, x, y, degrees, index) {
+  if (degrees === void 0) {
+    degrees = 0;
+  }
+
+  if (index) {
+    image.calculatePerIndex(index);
+  } else {
+    image.draw();
+  }
+
+  var radians = degrees * Math.PI / 180;
+  gine_1.Gine.handle.handle.save();
+  gine_1.Gine.handle.handle.translate(x, y);
+  gine_1.Gine.handle.handle.rotate(radians);
+  gine_1.Gine.handle.handle.drawImage(image.image, image.sourceX, image.sourceY, image.sizeX, image.sizeY, 0 - image.sizeX / 2, 0 - image.sizeY / 2, image.sizeX, image.sizeY);
+  gine_1.Gine.handle.handle.restore();
+}
+
+exports.rotateSprite = rotateSprite;
+},{"gine":"../node_modules/gine/dist/index.js"}],"enemies/bunny.ts":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -16125,6 +16179,369 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var gine_1 = require("gine");
+
+var util_1 = require("../util");
+
+var enemy_1 = require("./enemy");
+
+var Bunny =
+/** @class */
+function (_super) {
+  __extends(Bunny, _super);
+
+  function Bunny(x, y) {
+    var _this = _super.call(this, x, y, gine_1.Gine.store.getSprite('bunny')) || this;
+
+    _this.x = x;
+    _this.y = y;
+    _this.spriteIndex = 0;
+    _this.moveSpeed = Math.random() * 15 + 10;
+    _this.direction = 90;
+    _this.alive = true;
+    _this.status = 'hopping';
+    _this.delay = 0;
+    _this.lastActionTime = 0;
+    return _this;
+  }
+
+  Bunny.prototype.update = function (delta) {
+    if (!this.alive) {
+      return;
+    }
+
+    if (this.lastActionTime + this.delay <= Date.now()) {
+      switch (this.status) {
+        case 'hopping':
+          this.status = 'eating';
+          this.lastActionTime = Date.now();
+          this.delay = Math.random() * 3000 + 2000;
+          break;
+
+        case 'eating':
+          this.status = 'hopping';
+          this.direction = Math.round(Math.random() * 8) * 45;
+          this.lastActionTime = Date.now();
+          this.delay = Math.random() * 5000 + 1000;
+          break;
+      }
+    }
+
+    if (this.status === 'hopping') {
+      var xy = gine_1.Math2D.degreesToXY(this.direction);
+      this.x += xy.x * this.moveSpeed * delta;
+      this.y += xy.y * this.moveSpeed * delta;
+    }
+  };
+
+  Bunny.prototype.hit = function () {
+    this.die();
+  };
+
+  Bunny.prototype.die = function () {
+    this.alive = false;
+    this.spriteIndex = 1;
+  };
+
+  Bunny.prototype.draw = function () {
+    // Math2D.rotate(this.image, this.x, this.y, this.direction)
+    if (this.image && this.image.type === gine_1.Asset.SPRITE) {
+      this.image.draw();
+      util_1.rotateSprite(this.image, this.x, this.y, this.direction, this.spriteIndex);
+    }
+  };
+
+  return Bunny;
+}(enemy_1.Enemy);
+
+exports.Bunny = Bunny;
+},{"gine":"../node_modules/gine/dist/index.js","../util":"util.ts","./enemy":"enemies/enemy.ts"}],"enemies/index.ts":[function(require,module,exports) {
+"use strict";
+
+function __export(m) {
+  for (var p in m) {
+    if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+  }
+}
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+__export(require("./enemy"));
+
+__export(require("./bunny"));
+},{"./enemy":"enemies/enemy.ts","./bunny":"enemies/bunny.ts"}],"map.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var gine_1 = require("gine");
+
+var util_1 = require("./util");
+
+function generateTrees(amount, trees) {
+  if (amount === void 0) {
+    amount = 1;
+  }
+
+  for (var i = 0; i < amount; i++) {
+    trees.push({
+      x: Math.random() * 600,
+      y: Math.random() * 400,
+      width: 28
+    });
+  }
+}
+
+var trees = [{
+  x: 50,
+  y: 60,
+  width: 28
+}];
+generateTrees(20, trees);
+
+var Map =
+/** @class */
+function () {
+  function Map() {
+    this.totalWidth = gine_1.Gine.CONFIG.width / gine_1.Gine.CONFIG.tileSize;
+    this.totalHeight = gine_1.Gine.CONFIG.height / gine_1.Gine.CONFIG.tileSize;
+    this.grass = gine_1.Gine.store.getImage('grass');
+    this.tree = gine_1.Gine.store.getImage('tree');
+  }
+
+  Map.prototype.draw = function () {
+    var _this = this;
+
+    for (var i = 0; i < this.totalWidth; i++) {
+      for (var j = 0; j < this.totalHeight; j++) {
+        gine_1.Gine.handle.handle.drawImage(this.grass.image, i * gine_1.Gine.CONFIG.tileSize, j * gine_1.Gine.CONFIG.tileSize);
+      }
+    }
+
+    trees.forEach(function (t) {
+      gine_1.Gine.handle.draw(_this.tree, t.x - t.width / 2, t.y - t.width / 2); // Gine.handle.handle.beginPath()
+      // Gine.handle.handle.ellipse(
+      // 	t.x + t.width / 2,
+      // 	t.y + t.width / 2,
+      // 	t.width / 2,
+      // 	t.width / 2,
+      // 	0,
+      // 	0,
+      // 	2 * Math.PI
+      // )
+      // Gine.handle.handle.stroke()
+    });
+  };
+
+  Map.prototype.mapCollission = function (entity) {
+    if (entity.x && entity.y && entity.width) {
+      return !!trees.find(function (t) {
+        return util_1.circleCollission(entity, t);
+      });
+    }
+
+    return false;
+  };
+
+  return Map;
+}();
+
+exports.Map = Map;
+},{"gine":"../node_modules/gine/dist/index.js","./util":"util.ts"}],"player.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (b.hasOwnProperty(p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var gine_1 = require("gine");
+
+var entity_1 = require("./entity");
+
+var util_1 = require("./util");
+
+var Player =
+/** @class */
+function (_super) {
+  __extends(Player, _super);
+
+  function Player(x, y) {
+    var _this = _super.call(this) || this;
+
+    _this.x = x;
+    _this.y = y;
+    _this.isColliding = false;
+    _this.moveSpeed = 35;
+    _this.direction = 0;
+    _this.dirArr = [];
+    _this.isAttacking = false;
+    _this.attackDelayTime = 0;
+    _this.attackDelay = 600;
+    _this.attackIsDelayed = false;
+    _this.attackSpeed = 700;
+    _this.image = gine_1.Gine.store.getImage('bear-cub');
+    _this.width = _this.image.image.width;
+    _this.height = _this.image.image.height;
+    return _this;
+  }
+
+  Player.prototype.tick = function (delta) {
+    this.handleKeyboard(delta);
+
+    if (this.attackIsDelayed) {
+      if (Date.now() >= this.attackDelayTime + this.attackDelay) {
+        this.attackIsDelayed = false;
+        this.attackDelayTime = 0;
+      }
+    }
+  };
+
+  Player.prototype.handleKeyboard = function (delta) {
+    if (this.isColliding) {
+      this.moveSpeed = 10;
+    } else {
+      this.moveSpeed = 35;
+    }
+
+    this.isAttacking = false;
+    var vector = {
+      x: 0,
+      y: 0
+    };
+
+    if (gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.W]) {
+      vector.y -= delta * this.moveSpeed;
+    }
+
+    if (gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.D]) {
+      vector.x += delta * this.moveSpeed;
+    }
+
+    if (gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.S]) {
+      vector.y += delta * this.moveSpeed;
+    }
+
+    if (gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.A]) {
+      vector.x -= delta * this.moveSpeed;
+    }
+
+    this.direction = util_1.xyToDegrees(vector.x, vector.y);
+    this.x += vector.x;
+    this.y += vector.y;
+
+    if (gine_1.Gine.keyboard.allPressed()[gine_1.KEYCODES.SPACE]) {
+      this.attack(delta);
+    }
+
+    this.x = +this.x.toFixed(3);
+    this.y = +this.y.toFixed(3);
+  };
+
+  Player.prototype.attack = function (delta) {
+    if (!this.attackIsDelayed) {
+      var xy = gine_1.Math2D.degreesToXY(this.direction);
+      this.x += xy.x * delta * this.attackSpeed;
+      this.y += xy.y * delta * this.attackSpeed;
+      this.isAttacking = true;
+      this.setAttackDelay();
+    }
+  };
+
+  Player.prototype.setAttackDelay = function () {
+    this.attackIsDelayed = true;
+    this.attackDelayTime = Date.now();
+  };
+
+  Player.prototype.draw = function () {
+    gine_1.Math2D.rotate(this.image, this.x, this.y, this.direction); // Gine.handle.handle.strokeRect(this.x, this.y, this.width, this.height)
+    // Gine.handle.handle.beginPath()
+    // Gine.handle.handle.ellipse(
+    // 	this.x,
+    // 	this.y,
+    // 	this.width / 2,
+    // 	this.width / 2,
+    // 	this.direction,
+    // 	0,
+    // 	2 * Math.PI
+    // )
+    // Gine.handle.handle.stroke()
+  };
+
+  return Player;
+}(entity_1.Entity);
+
+exports.Player = Player;
+},{"gine":"../node_modules/gine/dist/index.js","./entity":"entity.ts","./util":"util.ts"}],"scenes/main.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (b.hasOwnProperty(p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var gine_1 = require("gine");
+
+var enemies_1 = require("../enemies");
+
+var map_1 = require("../map");
+
+var player_1 = require("../player");
+
+var util_1 = require("../util");
 
 var MainScene =
 /** @class */
@@ -16134,22 +16551,53 @@ function (_super) {
   function MainScene() {
     var _this = _super.call(this) || this;
 
-    console.log('constructing instance of MainScene');
-    _this.image = gine_1.Gine.store.get('logo');
+    _this.enemies = [];
+    _this.player = new player_1.Player(300, 200);
+    _this.map = new map_1.Map();
+
+    _this.enemies.push(new enemies_1.Bunny(120, 120), new enemies_1.Bunny(138, 118), new enemies_1.Bunny(115, 100));
+
     return _this;
   }
+
+  MainScene.prototype.tick = function (delta) {
+    delta = +delta.toFixed(4);
+
+    if (this.player.isAttacking) {
+      util_1.checkCollission(this.player, this.enemies).forEach(function (enemy) {
+        return enemy.hit();
+      });
+    }
+
+    this.player.tick(delta);
+    this.enemies.forEach(function (enemy) {
+      return enemy.update(delta);
+    });
+
+    if (this.map.mapCollission(this.player)) {
+      this.player.isColliding = true;
+    } else {
+      this.player.isColliding = false;
+    }
+  };
+
+  MainScene.prototype.second = function () {};
 
   MainScene.prototype.init = function () {};
 
   MainScene.prototype.frame = function () {
-    gine_1.Gine.handle.draw(this.image, gine_1.Gine.canvas.width / 2 - this.image.width / 2, gine_1.Gine.canvas.height / 2 - this.image.height / 2);
+    this.map.draw();
+    this.enemies.forEach(function (e) {
+      return e.draw();
+    });
+    this.player.draw();
   };
 
   return MainScene;
 }(gine_1.Scene);
 
 exports.MainScene = MainScene;
-},{"gine":"../node_modules/gine/dist/index.js"}],"main.ts":[function(require,module,exports) {
+},{"gine":"../node_modules/gine/dist/index.js","../enemies":"enemies/index.ts","../map":"map.ts","../player":"player.ts","../util":"util.ts"}],"main.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16157,10 +16605,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var gine_1 = require("gine");
-
-var operators_1 = require("rxjs/operators");
-
-var loading_1 = require("./scenes/loading");
 
 var main_1 = require("./scenes/main");
 
@@ -16171,32 +16615,43 @@ var cfg = new gine_1.Config(document.querySelector('#game'), Object.assign(gine_
 }));
 var game = new gine_1.Gine(cfg);
 var assets = [{
-  name: 'logo',
-  src: 'logo.png'
+  name: 'grass',
+  src: 'grass.png'
+}, {
+  name: 'bear-cub',
+  src: 'bear-cub.png'
+}, {
+  name: 'tree',
+  src: 'tree.png'
 }];
 assets.forEach(function (d) {
   gine_1.Gine.store.image(d.name, d.src);
 });
-gine_1.Gine.store.sprite('player', 'spritesheet-example.png', {
-  widthPerImage: 64,
-  heightPerImage: 64,
+gine_1.Gine.store.sprite('bunny', 'bunny-sprite.png', {
+  widthPerImage: 11,
+  heightPerImage: 15,
   imagesPerRow: 5,
-  numberOfFrames: 9,
-  ticksPerFrame: 24
-});
-var loadingScene = new loading_1.LoadingScene();
-game.changeScene(loadingScene);
-game.start();
+  numberOfFrames: 2
+}); // Gine.store.sprite('player', 'spritesheet-example.png', {
+// 	widthPerImage: 32,
+// 	heightPerImage: 32,
+// 	imagesPerRow: 5,
+// 	numberOfFrames: 9,
+// 	ticksPerFrame: 24
+// } as SpriteOptions)
+
 var mainScene = new main_1.MainScene();
+game.changeScene(mainScene);
+game.start();
 gine_1.Gine.keyboard.key$.subscribe();
-gine_1.Gine.mouse.mouse$.subscribe();
-gine_1.Gine.events.pipe(operators_1.filter(function (ev) {
-  return ev === gine_1.Scene.DESTROY_CURRENT_SCENE;
-})).subscribe(function (ev) {
-  game.changeScene(mainScene);
-});
+gine_1.Gine.mouse.mouse$.subscribe(); // Gine.events
+// 	.pipe(filter(ev => ev === Scene.DESTROY_CURRENT_SCENE))
+// 	.subscribe(ev => {
+// 		game.changeScene(mainScene)
+// 	})
+
 gine_1.Gine.events.subscribe(function (ev) {
   return console.log(ev);
 });
-},{"gine":"../node_modules/gine/dist/index.js","rxjs/operators":"../node_modules/rxjs/_esm5/operators/index.js","./scenes/loading":"scenes/loading.ts","./scenes/main":"scenes/main.ts"}]},{},["main.ts"], null)
+},{"gine":"../node_modules/gine/dist/index.js","./scenes/main":"scenes/main.ts"}]},{},["main.ts"], null)
 //# sourceMappingURL=/main.c39d6dcf.js.map
