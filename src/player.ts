@@ -53,6 +53,8 @@ export class Player extends Entity {
 	handleKeyboard(delta: number) {
 		if (this.isColliding) {
 			this.moveSpeed = 10
+		} else if (this.isCarrying) {
+			this.moveSpeed = 25
 		} else {
 			this.moveSpeed = 35
 		}

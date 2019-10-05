@@ -1,4 +1,4 @@
-import { Gine, KEYCODES, Scene } from 'gine'
+import { Gine, ImageAsset, KEYCODES, Scene } from 'gine'
 
 import { Bunny, Enemy } from '../enemies'
 import { Map } from '../map'
@@ -85,5 +85,19 @@ export class MainScene extends Scene {
 		this.map.draw(this.viewport.x, this.viewport.y)
 		this.enemies.forEach(e => e.draw(this.viewport.x, this.viewport.y))
 		this.player.draw()
+		Gine.handle.draw(Gine.store.getImage('meat-empty')!, 8, 160)
+		const meat: ImageAsset = Gine.store.getImage('meat-full')!
+		const amount = meat.image.height * (1 - this.player.stamina)
+		Gine.handle.handle.drawImage(
+			meat.image,
+			0,
+			amount,
+			meat.image.width,
+			meat.image.height,
+			8,
+			160 + amount,
+			meat.image.width,
+			meat.image.height
+		)
 	}
 }

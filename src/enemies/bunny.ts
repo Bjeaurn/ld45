@@ -50,11 +50,17 @@ export class Bunny extends Enemy {
 	die() {
 		this.alive = false
 		this.spriteIndex = 1
+		this.lastActionTime = Date.now()
 	}
 
 	draw(x: number, y: number) {
 		// Math2D.rotate(this.image, this.x, this.y, this.direction)
-		if (!this.alive && this.image) {
+		if (
+			!this.alive &&
+			this.image &&
+			Date.now() >= this.lastActionTime + 4000 &&
+			Date.now() <= this.lastActionTime + 24000
+		) {
 			Gine.handle.drawSprite(this.ebtn, this.x - x - 8, this.y - y - 20)
 		}
 		if (this.image && this.image.type === Asset.SPRITE) {
