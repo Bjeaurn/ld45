@@ -38,23 +38,10 @@ export class MainScene extends Scene {
 				}
 			)
 		}
-		this.player.tick(delta)
-		this.viewport.x = this.player.x - this.viewport.width
-		this.viewport.y = this.player.y - this.viewport.height
-		this.enemies.forEach(enemy => enemy.update(delta))
-		if (this.map.mapCollission(this.player)) {
-			this.player.isColliding = true
-		} else {
-			this.player.isColliding = false
-		}
-	}
-
-	second() {}
-
-	init() {}
-
-	frame() {
-		if (Gine.keyboard.allPressed()[KEYCODES.E]) {
+		if (
+			this.player.canDoAction(delta) &&
+			Gine.keyboard.allPressed()[KEYCODES.E]
+		) {
 			if (this.player.isCarrying === 0) {
 				const targets = checkCollission(
 					this.player,
@@ -75,8 +62,28 @@ export class MainScene extends Scene {
 			} else {
 				this.player.drop()
 			}
+			this.player.setAction()
 		}
+		this.player.tick(delta)
+		this.viewport.x = this.player.x - this.viewport.width
+		this.viewport.y = this.player.y - this.viewport.height
+		this.enemies.forEach(enemy => enemy.update(delta))
+		if (this.map.mapCollission(this.player)) {
+			this.player.isColliding = true
+		} else {
+			this.player.isColliding = false
+		}
+	}
 
+	second() {
+		// Fun little trick to play with the weather
+		this.map.weather++
+		if (this.map.weather > 3) this.map.weather = 0
+	}
+
+	init() {}
+
+	frame() {
 		this.map.draw(this.viewport.x, this.viewport.y)
 		this.enemies.forEach(e => e.draw(this.viewport.x, this.viewport.y))
 		this.player.draw()

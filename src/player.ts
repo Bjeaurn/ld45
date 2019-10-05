@@ -9,7 +9,7 @@ export class Player extends Entity {
 	private moveSpeed: number = 35
 	private direction: number = 0
 	private dirArr: number[] = []
-
+	private actionTime: number = 0
 	public isCarrying: number = 0
 	public isAttacking: boolean = false
 	private attackDelayTime: number = 0
@@ -83,6 +83,20 @@ export class Player extends Entity {
 			this.isAttacking = true
 			this.setAttackDelay()
 		}
+	}
+
+	canDoAction(delta: number): boolean {
+		if (this.actionTime > 0) {
+			this.actionTime -= delta
+		}
+		if (this.actionTime < 0) {
+			this.actionTime = 0
+		}
+		return this.actionTime === 0
+	}
+
+	setAction() {
+		this.actionTime = 0.2
 	}
 
 	carry(entity: any) {

@@ -18,7 +18,6 @@ export class Enemy extends Entity {
 			this.width = (this.image as SpriteAsset).sizeX
 			this.height = (this.image as SpriteAsset).sizeY
 		}
-		console.log(this)
 	}
 
 	update(delta: number) {}

@@ -1,4 +1,4 @@
-import { Gine, ImageAsset } from 'gine'
+import { Gine, SpriteAsset } from 'gine'
 
 import { circleCollission } from './util'
 
@@ -24,14 +24,15 @@ generateTrees(200, trees)
 export class Map {
 	totalWidth: number
 	totalHeight: number
-	grass: ImageAsset
-	tree: ImageAsset
+	grass: SpriteAsset
+	tree: SpriteAsset
+	weather: number = 1
 	boundaries: { width: number; height: number; tileSize: number }
 	constructor() {
-		this.totalWidth = Gine.CONFIG.width / Gine.CONFIG.tileSize
-		this.totalHeight = Gine.CONFIG.height / Gine.CONFIG.tileSize
-		this.grass = Gine.store.getImage('grass')!
-		this.tree = Gine.store.getImage('tree')!
+		this.totalWidth = Gine.CONFIG.width / (Gine.CONFIG.tileSize / 2)
+		this.totalHeight = Gine.CONFIG.height / (Gine.CONFIG.tileSize / 2)
+		this.grass = Gine.store.getSprite('grass')!
+		this.tree = Gine.store.getSprite('tree')!
 		this.boundaries = {
 			width: Gine.CONFIG.width,
 			height: Gine.CONFIG.height,
@@ -42,10 +43,11 @@ export class Map {
 	draw(x: number, y: number) {
 		for (var i = 0; i < this.totalWidth; i++) {
 			for (var j = 0; j < this.totalHeight; j++) {
-				Gine.handle.handle.drawImage(
-					this.grass.image,
+				Gine.handle.drawSprite(
+					this.grass,
 					i * Gine.CONFIG.tileSize,
-					j * Gine.CONFIG.tileSize
+					j * Gine.CONFIG.tileSize,
+					this.weather
 				)
 			}
 		}
@@ -58,10 +60,11 @@ export class Map {
 					t.y <= y + this.boundaries.height + this.boundaries.tileSize
 			)
 			.forEach(t => {
-				Gine.handle.draw(
+				Gine.handle.drawSprite(
 					this.tree,
 					t.x - t.width / 2 - x,
-					t.y - t.width / 2 - y
+					t.y - t.width / 2 - y,
+					this.weather
 				)
 				// Gine.handle.handle.beginPath()
 				// Gine.handle.handle.ellipse(
