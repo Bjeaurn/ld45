@@ -32,7 +32,11 @@ export class MainScene extends Scene {
 	tick(delta: number) {
 		delta = +delta.toFixed(4)
 		if (this.player.isAttacking) {
-			checkCollission(this.player, this.enemies).forEach(enemy => enemy.hit())
+			checkCollission(this.player, this.enemies.filter(e => e.alive)).forEach(
+				enemy => {
+					enemy.hit()
+				}
+			)
 		}
 		this.player.tick(delta)
 		this.viewport.x = this.player.x - this.viewport.width
@@ -56,6 +60,7 @@ export class MainScene extends Scene {
 					this.player,
 					this.enemies.filter(e => !e.alive)
 				).sort((a, b) => {
+					// FIXME - Should be in the library. Math2D
 					const ax = a.x - this.player.x
 					const bx = b.x - this.player.x
 					const ay = a.y - this.player.y

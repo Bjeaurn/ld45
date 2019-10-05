@@ -34,7 +34,6 @@ export class Player extends Entity {
 		}
 
 		if (this.attackDelayTime > 0) {
-			console.log('updating')
 			this.image.update()
 		} else {
 			this.image.currentSpriteIndex = 0

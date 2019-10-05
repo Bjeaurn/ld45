@@ -8,13 +8,17 @@ export class Enemy extends Entity {
 	constructor(
 		public x: number,
 		public y: number,
-		public image?: ImageAsset | SpriteAsset
+		public image: ImageAsset | SpriteAsset
 	) {
 		super()
-		if (this.image) {
+		if (this.image.imageLoaded) {
 			this.width = this.image.image.width
 			this.height = this.image.image.height
+		} else {
+			this.width = (this.image as SpriteAsset).sizeX
+			this.height = (this.image as SpriteAsset).sizeY
 		}
+		console.log(this)
 	}
 
 	update(delta: number) {}
