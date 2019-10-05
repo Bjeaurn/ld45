@@ -53,7 +53,9 @@ export class Player extends Entity {
 		if (Gine.keyboard.allPressed()[KEYCODES.A]) {
 			vector.x -= delta * this.moveSpeed
 		}
-		this.direction = xyToDegrees(vector.x, vector.y)
+		if (vector.x !== 0 || vector.y !== 0) {
+			this.direction = xyToDegrees(vector.x, vector.y)
+		}
 		this.x += vector.x
 		this.y += vector.y
 		if (Gine.keyboard.allPressed()[KEYCODES.SPACE]) {
@@ -79,7 +81,7 @@ export class Player extends Entity {
 	}
 
 	draw() {
-		Math2D.rotate(this.image, this.x, this.y, this.direction)
+		Math2D.rotate(this.image, 300, 200, this.direction)
 		// Gine.handle.handle.strokeRect(this.x, this.y, this.width, this.height)
 		// Gine.handle.handle.beginPath()
 		// Gine.handle.handle.ellipse(

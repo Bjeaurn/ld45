@@ -20,7 +20,7 @@ export class Enemy extends Entity {
 
 	update(delta: number) {}
 
-	draw() {
+	draw(x: number, y: number) {
 		if (this.image) {
 			// Gine.handle.handle.drawImage(this.image.image, this.x, this.y)
 			Math2D.rotate(this.image, this.x, this.y, this.direction)

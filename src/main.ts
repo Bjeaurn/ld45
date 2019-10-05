@@ -40,7 +40,7 @@ game.changeScene(mainScene)
 game.start()
 
 Gine.keyboard.key$.subscribe()
-Gine.mouse.mouse$.subscribe()
+// Gine.mouse.mouse$.subscribe()
 
 // Gine.events
 // 	.pipe(filter(ev => ev === Scene.DESTROY_CURRENT_SCENE))

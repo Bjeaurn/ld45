@@ -52,14 +52,14 @@ export class Bunny extends Enemy {
 		this.spriteIndex = 1
 	}
 
-	draw() {
+	draw(x: number, y: number) {
 		// Math2D.rotate(this.image, this.x, this.y, this.direction)
 		if (this.image && this.image.type === Asset.SPRITE) {
 			this.image.draw()
 			rotateSprite(
 				this.image as SpriteAsset,
-				this.x,
-				this.y,
+				this.x - x,
+				this.y - y,
 				this.direction,
 				this.spriteIndex
 			)
