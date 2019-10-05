@@ -1,4 +1,4 @@
-import { Gine, Scene } from 'gine'
+import { Gine, KEYCODES, Scene } from 'gine'
 
 import { Bunny, Enemy } from '../enemies'
 import { Map } from '../map'
@@ -50,6 +50,20 @@ export class MainScene extends Scene {
 	init() {}
 
 	frame() {
+		if (Gine.keyboard.allPressed()[KEYCODES.E]) {
+			if (this.player.isCarrying === 0) {
+				const targets = checkCollission(
+					this.player,
+					this.enemies.filter(e => !e.alive)
+				)
+				if (targets.length > 0) {
+					this.player.carry(targets[0])
+				}
+			} else {
+				this.player.drop()
+			}
+		}
+
 		this.map.draw(this.viewport.x, this.viewport.y)
 		this.enemies.forEach(e => e.draw(this.viewport.x, this.viewport.y))
 		this.player.draw()

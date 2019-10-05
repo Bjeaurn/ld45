@@ -3,7 +3,7 @@ import { ImageAsset, Math2D, SpriteAsset } from 'gine'
 import { Entity } from '../entity'
 
 export class Enemy extends Entity {
-	health: number = 1
+	alive: boolean = true
 	direction: number = 0
 	constructor(
 		public x: number,

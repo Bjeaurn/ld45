@@ -10,12 +10,13 @@ export class Player extends Entity {
 	private direction: number = 0
 	private dirArr: number[] = []
 
+	public isCarrying: number = 0
 	public isAttacking: boolean = false
 	private attackDelayTime: number = 0
 	private attackDelay: number = 600
 	private attackIsDelayed: boolean = false
 	private attackSpeed: number = 700
-
+	private carrying?: any
 	constructor(public x: number, public y: number) {
 		super()
 		this.image = Gine.store.getSprite('bear-cub')!
@@ -65,6 +66,9 @@ export class Player extends Entity {
 		}
 		this.x += vector.x
 		this.y += vector.y
+		if (this.carrying) {
+			this.handleCarry(vector)
+		}
 		if (Gine.keyboard.allPressed()[KEYCODES.SPACE]) {
 			this.attack(delta)
 		}
@@ -79,6 +83,31 @@ export class Player extends Entity {
 			this.y += xy.y * delta * this.attackSpeed
 			this.isAttacking = true
 			this.setAttackDelay()
+		}
+	}
+
+	carry(entity: any) {
+		if (!this.carrying) {
+			entity.x = this.x
+			entity.y = this.y
+			this.carrying = entity
+			this.isCarrying = Date.now()
+		}
+	}
+
+	handleCarry(vector: any) {
+		if (this.carrying) {
+			this.carrying.x += vector.x
+			this.carrying.y += vector.y
+		}
+	}
+
+	drop() {
+		if (this.carrying) {
+			this.carrying = undefined
+			this.isCarrying = 0
+		} else {
+			this.isCarrying = 0
 		}
 	}
 
