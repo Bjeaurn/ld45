@@ -1,6 +1,7 @@
 import { Gine, ImageAsset, KEYCODES, Scene } from 'gine'
 
-import { Bunny, Enemy } from '../enemies'
+import { Bunny, Enemy, Wolf } from '../enemies'
+import { Entity } from '../entity'
 import { GUI } from '../gui'
 import { GameMap } from '../map'
 import { Player } from '../player'
@@ -31,6 +32,8 @@ export class MainScene extends Scene {
 			new Bunny(Math.random() * 1200, Math.random() * 1200),
 			new Bunny(Math.random() * 1200, Math.random() * 1200)
 		)
+
+		this.enemies.push(new Wolf(100, 50))
 	}
 
 	tick(delta: number) {
@@ -71,7 +74,7 @@ export class MainScene extends Scene {
 		this.player.tick(delta)
 		this.viewport.x = this.player.x - this.viewport.width
 		this.viewport.y = this.player.y - this.viewport.height
-		this.enemies.forEach(enemy => enemy.update(delta))
+		this.enemies.filter(e => e.alive).forEach(enemy => enemy.update(delta))
 		if (this.map.mapCollission(this.player)) {
 			this.player.isColliding = true
 		} else {
@@ -94,6 +97,9 @@ export class MainScene extends Scene {
 		// if (this.map.weather > 3) this.map.weather = 0
 		this.enemies.forEach((e, i) => {
 			if (!e.alive && e.lifePoints === 0) this.enemies.splice(i, 1)
+		})
+		Entity.entities.forEach((e, i) => {
+			if (!e.alive && (e as any).lifePoints === 0) Entity.entities.splice(i, 1)
 		})
 		if (this.lastAlert === 0 && this.kills.length === 0) {
 			this.lastAlert = Date.now()

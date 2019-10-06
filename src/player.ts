@@ -139,6 +139,10 @@ export class Player extends Entity {
 		this.actionTime = 0.2
 	}
 
+	hit() {
+		console.log('you have been hit')
+	}
+
 	carry(entity: Enemy) {
 		if (!this.carrying) {
 			entity.x = this.x
@@ -153,6 +157,10 @@ export class Player extends Entity {
 			this.carrying.x += vector.x
 			this.carrying.y += vector.y
 		}
+	}
+
+	consume() {
+		console.log('Game is over')
 	}
 
 	drop() {

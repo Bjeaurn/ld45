@@ -25,6 +25,8 @@ assets.forEach(d => {
 	Gine.store.image(d.name, d.src)
 })
 
+Gine.store.sprite('wolf', 'wolf.png', new SpriteOptions(12, 31, 2, 2))
+
 Gine.store.sprite('grass', 'grass-sprite.png', new SpriteOptions(32, 32, 4, 4))
 
 Gine.store.sprite('tree', 'tree-sprite.png', new SpriteOptions(32, 32, 4, 4))

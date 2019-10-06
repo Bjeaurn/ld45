@@ -3,7 +3,6 @@ import { Gine, ImageAsset, Math2D, SpriteAsset } from 'gine'
 import { Entity } from '../entity'
 
 export class Enemy extends Entity {
-	alive: boolean = true
 	direction: number = 0
 	lifePoints: number = 0.2
 	ebtn: SpriteAsset
@@ -28,12 +27,14 @@ export class Enemy extends Entity {
 		;(this.image as any) = undefined
 	}
 
+	hit() {}
+
 	update(delta: number) {}
 
 	draw(x: number, y: number) {
 		if (this.image) {
 			// Gine.handle.handle.drawImage(this.image.image, this.x, this.y)
-			Math2D.rotate(this.image, this.x, this.y, this.direction)
+			Math2D.rotate(this.image, this.x - x, this.y - y, this.direction)
 			// Gine.handle.handle.strokeRect(this.x, this.y, this.width, this.height)
 			// Gine.handle.handle.beginPath()
 			// Gine.handle.handle.ellipse(

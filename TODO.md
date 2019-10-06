@@ -1,10 +1,10 @@
 ## The Bear Game
 
 [x] GUI / Storytelling / Tutorial / Tasks things
-[ ] Stamina/hunger/health/protection like values?*
+[x] Stamina/hunger/health/protection like values?*
+[ ] Wolves? To keep it interesting and "survive"
 [ ] Weather (influence above values, changes spawn rates)
 [ ] Hidey holes for increased protection etc?*
-[ ] Wolves? To keep it interesting and "survive"
 [ ] Fish & Water, just to mix it up.
 [ ] Based on story; we need mom
 [ ] Based on story, we need to grow up as bear
