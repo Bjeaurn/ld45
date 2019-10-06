@@ -227,7 +227,7 @@ export class MainScene extends Scene {
 				wolves = 1
 				break
 			case 3:
-				wolves = 1
+				wolves = 2
 				break
 		}
 

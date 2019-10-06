@@ -32,7 +32,12 @@ export class BearParent extends Entity {
 					break
 				case 'chilling':
 					this.status = 'moving'
-					this.direction = Math.round(Math.random() * 8) * 45
+					const player = Entity.entities.find(e => e.type === 'player')
+					if (player) {
+						this.direction = this.calculateDirection(player.x, player.y)
+					} else {
+						this.direction = Math.round(Math.random() * 8) * 45
+					}
 					this.lastActionTime = Date.now()
 					this.delay = Math.random() * 3000 + 1000
 					break
@@ -56,4 +61,7 @@ export class BearParent extends Entity {
 	}
 
 	hit() {}
+	calculateDirection(targetX: number, targetY: number): number {
+		return (Math.atan2(targetY - this.y, targetX - this.x) * 180) / Math.PI + 90
+	}
 }

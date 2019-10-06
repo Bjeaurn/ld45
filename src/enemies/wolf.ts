@@ -28,7 +28,7 @@ export class Wolf extends Enemy {
 	}
 
 	hit() {
-		this.lastAttack = Date.now() - 200
+		this.lastAttack = Date.now() + this.attackDelay / 2
 		this.selectedIndex = 2
 		this.lastHit = Date.now()
 		this.health--
@@ -149,7 +149,7 @@ export class Wolf extends Enemy {
 		}
 		if (!this.target) {
 			this.target = Entity.entities
-				.filter(e => e.alive && e.type !== 'wolf')
+				.filter(e => e.alive && e.type === 'player')
 				.sort((a, b) => {
 					// FIXME - Should be in the library. Math2D
 					const ax = a.x - this.x
