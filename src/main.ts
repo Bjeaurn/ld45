@@ -16,7 +16,10 @@ const assets: BasicAsset[] = [
 	{ name: 'grass', src: 'grass.png' },
 	{ name: 'tree', src: 'tree.png' },
 	{ name: 'meat-empty', src: 'meat-empty.png' },
-	{ name: 'meat-full', src: 'meat-filled.png' }
+	{ name: 'meat-full', src: 'meat-filled.png' },
+	{ name: 'alert-box', src: 'alert-box.png' },
+	{ name: 'stamina-empty', src: 'stamina-empty.png' },
+	{ name: 'stamina-full', src: 'stamina-full.png' }
 ]
 assets.forEach(d => {
 	Gine.store.image(d.name, d.src)

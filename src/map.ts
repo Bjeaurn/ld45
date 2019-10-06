@@ -21,7 +21,7 @@ const trees: Array<{ x: number; y: number; width: number }> = [
 
 generateTrees(200, trees)
 
-export class Map {
+export class GameMap {
 	totalWidth: number
 	totalHeight: number
 	grass: SpriteAsset

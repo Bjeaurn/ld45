@@ -1,6 +1,6 @@
 ## The Bear Game
 
-[ ] GUI / Storytelling / Tutorial / Tasks things
+[x] GUI / Storytelling / Tutorial / Tasks things
 [ ] Stamina/hunger/health/protection like values?*
 [ ] Weather (influence above values, changes spawn rates)
 [ ] Hidey holes for increased protection etc?*

@@ -8,6 +8,7 @@ export class Player extends Entity {
 	image: SpriteAsset
 	isColliding: boolean = false
 	public stamina: number = 1
+	public hunger: number = 0.6
 	public isCarrying: number = 0
 	public isAttacking: boolean = false
 
@@ -28,6 +29,7 @@ export class Player extends Entity {
 	}
 
 	tick(delta: number) {
+		this.hunger -= delta * 0.0005
 		if (this.actionTime > 0) {
 			this.actionTime -= delta
 		}
@@ -83,7 +85,12 @@ export class Player extends Entity {
 		} else {
 			this.stamina += delta / 32
 			if (this.stamina > 1) this.stamina = 1
+			if (this.stamina < 1) {
+				this.hunger -= delta * 0.007
+			}
 		}
+		if (this.hunger < 0) this.hunger = 0
+		if (this.hunger > 1) this.hunger = 1
 		this.x += vector.x
 		this.y += vector.y
 		if (this.carrying) {
@@ -115,7 +122,9 @@ export class Player extends Entity {
 
 	eat(entity: Enemy) {
 		if (entity.lifePoints) {
-			this.stamina += entity.lifePoints
+			this.hunger += entity.lifePoints
+			this.stamina += entity.lifePoints / 2
+			if (this.hunger > 1) this.hunger = 1
 			if (this.stamina > 1) this.stamina = 1
 			entity.consume()
 		}

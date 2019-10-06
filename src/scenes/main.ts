@@ -1,19 +1,23 @@
 import { Gine, ImageAsset, KEYCODES, Scene } from 'gine'
 
 import { Bunny, Enemy } from '../enemies'
-import { Map } from '../map'
+import { GUI } from '../gui'
+import { GameMap } from '../map'
 import { Player } from '../player'
 import { checkCollission } from '../util'
 
 export class MainScene extends Scene {
-	map: Map
+	map: GameMap
 	player: Player
 	enemies: Enemy[] = []
 	viewport: { x: number; y: number; width: number; height: number }
+	kills: Enemy[] = []
+	lastAlert: number = 0
+	flags: Map<string, boolean | number> = new Map()
 	constructor() {
 		super()
 		this.player = new Player(300, 200)
-		this.map = new Map()
+		this.map = new GameMap()
 		this.viewport = {
 			width: Gine.CONFIG.width / 2,
 			height: Gine.CONFIG.height / 2,
@@ -33,7 +37,12 @@ export class MainScene extends Scene {
 		delta = +delta.toFixed(4)
 		if (this.player.isAttacking) {
 			checkCollission(this.player, this.enemies.filter(e => e.alive)).forEach(
-				enemy => enemy.hit()
+				enemy => {
+					enemy.hit()
+					if (!enemy.alive) {
+						this.kills.push(enemy)
+					}
+				}
 			)
 		}
 		if (this.player.canDoAction() && Gine.keyboard.allPressed()[KEYCODES.E]) {
@@ -68,6 +77,15 @@ export class MainScene extends Scene {
 		} else {
 			this.player.isColliding = false
 		}
+		if (
+			GUI.updateAlerts(
+				delta,
+				Gine.keyboard.isPressed(KEYCODES.E),
+				this.lastAlert
+			)
+		) {
+			this.lastAlert = Date.now()
+		}
 	}
 
 	second() {
@@ -77,6 +95,16 @@ export class MainScene extends Scene {
 		this.enemies.forEach((e, i) => {
 			if (!e.alive && e.lifePoints === 0) this.enemies.splice(i, 1)
 		})
+		if (this.lastAlert === 0 && this.kills.length === 0) {
+			this.lastAlert = Date.now()
+			GUI.createAlert("Oh no, where's mom? I'm lost!")
+			GUI.createAlert("I'm hungry too, maybe I can find something to eat...")
+			GUI.createAlert('--- Use the SPACE bar to attack ---')
+		}
+		if (!this.flags.get('staminaWarning') && this.player.stamina < 0.4) {
+			GUI.createAlert("I'm getting tired, I should rest...", 6)
+			this.flags.set('staminaWarning', true)
+		}
 	}
 
 	init() {}
@@ -85,19 +113,39 @@ export class MainScene extends Scene {
 		this.map.draw(this.viewport.x, this.viewport.y)
 		this.enemies.forEach(e => e.draw(this.viewport.x, this.viewport.y))
 		this.player.draw()
+		this.drawHungerStamina()
+		GUI.drawAlerts()
+	}
+
+	drawHungerStamina() {
 		Gine.handle.draw(Gine.store.getImage('meat-empty')!, 8, 160)
 		const meat: ImageAsset = Gine.store.getImage('meat-full')!
-		const amount = meat.image.height * (1 - this.player.stamina)
+		const hungerAmount = meat.image.height * (1 - this.player.hunger)
 		Gine.handle.handle.drawImage(
 			meat.image,
 			0,
-			amount,
+			hungerAmount,
 			meat.image.width,
 			meat.image.height,
 			8,
-			160 + amount,
+			160 + hungerAmount,
 			meat.image.width,
 			meat.image.height
+		)
+
+		Gine.handle.draw(Gine.store.getImage('stamina-empty')!, 8, 210)
+		const staminaImg: ImageAsset = Gine.store.getImage('stamina-full')!
+		const staminaAmount = staminaImg.image.height * (1 - this.player.stamina)
+		Gine.handle.handle.drawImage(
+			staminaImg.image,
+			0,
+			staminaAmount,
+			staminaImg.image.width,
+			staminaImg.image.height,
+			8,
+			210 + staminaAmount,
+			staminaImg.image.width,
+			staminaImg.image.height
 		)
 	}
 }
