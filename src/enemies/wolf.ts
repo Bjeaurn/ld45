@@ -37,9 +37,10 @@ export class Wolf extends Enemy {
 		}
 		if (this.carrying) {
 			this.carrying = undefined
-			this.mode = 'defending'
-			this.selectTarget()
 		}
+		this.mode = 'defending'
+		this.target = undefined
+		this.selectTarget()
 	}
 
 	die() {
@@ -70,6 +71,11 @@ export class Wolf extends Enemy {
 					this.direction = this.calculateDirection(this.target.x, this.target.y)
 					this.distanceToTarget = this.calculateDistance(this.target)
 					if (this.distanceToTarget > 60) {
+						this.direction = this.calculateDirection(
+							this.target.x,
+							this.target.y
+						)
+						this.moveVector = Math2D.degreesToXY(this.direction)
 						this.mode = 'moving'
 					} else {
 						if (!this.carrying && this.distanceToTarget < 16) {
@@ -90,7 +96,11 @@ export class Wolf extends Enemy {
 								this.target = undefined
 							}
 						} else {
-							// console.log(this.moveVector)
+							this.direction = this.calculateDirection(
+								this.target.x,
+								this.target.y
+							)
+							this.moveVector = Math2D.degreesToXY(this.direction)
 							if (this.moveVector) {
 								this.x += this.moveVector.x * this.moveSpeed * delta
 								this.y += this.moveVector.y * this.moveSpeed * delta
@@ -153,6 +163,9 @@ export class Wolf extends Enemy {
 		}
 		if (this.target) {
 			this.targetTime = Date.now()
+			if (this.mode === 'defending') {
+				this.targetTime -= 600
+			}
 			this.direction = this.calculateDirection(this.target.x, this.target.y)
 			this.moveVector = Math2D.degreesToXY(this.direction)
 		}

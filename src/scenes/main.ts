@@ -29,6 +29,7 @@ export class MainScene extends Scene {
 		}
 
 		new Bunny(100, 120)
+
 		new Bunny(Math.random() * 1200, Math.random() * 1200)
 		new Bunny(Math.random() * 1200, Math.random() * 1200)
 		new Bunny(Math.random() * 1200, Math.random() * 1200)
