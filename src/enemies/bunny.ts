@@ -9,6 +9,7 @@ export class Bunny extends Enemy {
 	spriteIndex: number = 0
 	moveSpeed: number = Math.random() * 15 + 10
 	direction: number = 90
+	points: number = 1
 	constructor(public x: number, public y: number) {
 		super(x, y, Gine.store.getSprite('bunny')!)
 	}

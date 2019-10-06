@@ -19,18 +19,21 @@ const assets: BasicAsset[] = [
 	{ name: 'meat-full', src: 'meat-filled.png' },
 	{ name: 'alert-box', src: 'alert-box.png' },
 	{ name: 'stamina-empty', src: 'stamina-empty.png' },
-	{ name: 'stamina-full', src: 'stamina-full.png' }
+	{ name: 'stamina-full', src: 'stamina-full.png' },
+	{ name: 'heart', src: 'heart.png' },
+	{ name: 'game-over', src: 'end-2.png' },
+	{ name: 'game-completed', src: 'end-1.png' }
 ]
 assets.forEach(d => {
 	Gine.store.image(d.name, d.src)
 })
 
-Gine.store.sprite('wolf', 'wolf.png', new SpriteOptions(12, 31, 2, 2))
+Gine.store.sprite('wolf', 'wolf.png', new SpriteOptions(12, 31, 3, 3))
 
 Gine.store.sprite('grass', 'grass-sprite.png', new SpriteOptions(32, 32, 4, 4))
 
 Gine.store.sprite('tree', 'tree-sprite.png', new SpriteOptions(32, 32, 4, 4))
-
+Gine.store.sprite('big-bear', 'big-bear.png', new SpriteOptions(24, 40, 3, 3))
 Gine.store.sprite('bear-cub', 'bear-cub-sprite.png', {
 	widthPerImage: 18,
 	heightPerImage: 22,

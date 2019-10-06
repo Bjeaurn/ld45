@@ -53,6 +53,8 @@ export function rotateSprite(
 ): void {
 	if (index) {
 		image.calculatePerIndex(index)
+		// image.currentSpriteIndex = index
+		// image.draw()
 	} else {
 		image.draw()
 	}

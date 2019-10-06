@@ -2,13 +2,15 @@
 
 [x] GUI / Storytelling / Tutorial / Tasks things
 [x] Stamina/hunger/health/protection like values?*
-[ ] Wolves? To keep it interesting and "survive"
-[ ] Weather (influence above values, changes spawn rates)
-[ ] Hidey holes for increased protection etc?*
-[ ] Fish & Water, just to mix it up.
-[ ] Based on story; we need mom
-[ ] Based on story, we need to grow up as bear
-[ ] Based on the story, we need an endgame.
+[x] Wolves? To keep it interesting and "survive"
+[ ] Wolves steal when you're carrying, but that doesn't work properly.
+[x] Weather (influence above values, changes spawn rates)
+<!-- [ ] Hidey holes for increased protection etc?* -->
+<!-- [ ] Fish & Water, just to mix it up. -->
+[x] Based on story; we need mom
+<!-- [ ] Based on story, we need to grow up as bear -->
+[x] Based on the story, we need an endgame.
+[x] Art for the endings (win/lose), calc score perhaps?
 
 --- EXTRA'S
 

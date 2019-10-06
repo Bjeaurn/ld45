@@ -6,23 +6,31 @@ import { rotateSprite } from '../util'
 import { Enemy } from './enemy'
 
 export class Wolf extends Enemy {
+	type: 'wolf' = 'wolf'
 	selectedIndex: number = 0
+	lastHit: number = 0
 	health: number = 3
 	lifePoints: number = 0.05
+	points: number = 5
 	target?: Entity
 	targetTime: number = 0
 	distanceToTarget: number = 0
 	carrying?: Entity
 	moveVector?: { x: number; y: number }
 	moveSpeed: number = 25
+	attackDelay: number = 1000
+	startPos: { x: number; y: number }
 	lastAttack: number = 0
 	mode: 'moving' | 'hunting' | 'defending' | 'carrying' = 'moving'
 	constructor(x: number, y: number) {
 		super(x, y, Gine.store.getSprite('wolf')!)
+		this.startPos = { x, y }
 	}
 
 	hit() {
+		this.lastAttack = Date.now() - 200
 		this.selectedIndex = 2
+		this.lastHit = Date.now()
 		this.health--
 		if (this.health <= 0) {
 			this.die()
@@ -30,7 +38,7 @@ export class Wolf extends Enemy {
 		if (this.carrying) {
 			this.carrying = undefined
 			this.mode = 'defending'
-			console.log(this)
+			this.selectTarget()
 		}
 	}
 
@@ -44,7 +52,7 @@ export class Wolf extends Enemy {
 		if (!this.target && !this.carrying) {
 			this.selectTarget()
 		} else if (this.target) {
-			if (Date.now() > this.targetTime + 4000) {
+			if (Date.now() > this.targetTime + 2500) {
 				this.target = undefined
 			} else {
 				if (this.mode === 'moving') {
@@ -66,12 +74,19 @@ export class Wolf extends Enemy {
 					} else {
 						if (!this.carrying && this.distanceToTarget < 16) {
 							if (this.target.alive) {
-								;(this.target as Enemy | Player).hit()
+								if (Date.now() >= this.lastAttack + this.attackDelay) {
+									;(this.target as Enemy | Player).hit()
+									this.lastAttack = Date.now()
+								}
 							} else {
 								this.carrying = this.target
 								this.mode = 'carrying'
 								// ;(this.target as Enemy | Player).consume()
-								this.moveVector = { x: 1, y: 0 }
+								this.direction = this.calculateDirection(
+									this.startPos.x,
+									this.startPos.y
+								)
+								this.moveVector = Math2D.degreesToXY(this.direction)
 								this.target = undefined
 							}
 						} else {
@@ -87,12 +102,19 @@ export class Wolf extends Enemy {
 		}
 		if (this.mode === 'carrying' && this.carrying) {
 			this.moveSpeed = 30
-			this.direction = 90
 			if (this.moveVector) {
 				this.x += this.moveVector.x * this.moveSpeed * delta
 				this.y += this.moveVector.y * this.moveSpeed * delta
 				this.carrying.x = this.x
 				this.carrying.y = this.y
+				if (this.calculateDistance(this.startPos as Entity) < 16) {
+					if (this.carrying.type === 'player') {
+						this.carrying = undefined
+					} else {
+						this.carrying.despawn()
+					}
+					this.despawn()
+				}
 			}
 		}
 		if (this.mode === 'defending') {
@@ -116,7 +138,18 @@ export class Wolf extends Enemy {
 				})[0]
 		}
 		if (!this.target) {
-			this.target = Entity.entities.find(e => e.alive)
+			this.target = Entity.entities
+				.filter(e => e.alive && e.type !== 'wolf')
+				.sort((a, b) => {
+					// FIXME - Should be in the library. Math2D
+					const ax = a.x - this.x
+					const bx = b.x - this.x
+					const ay = a.y - this.y
+					const by = b.y - this.y
+					const distanceA = Math.sqrt(ax * ax + ay * ay)
+					const distanceB = Math.sqrt(bx * bx + by * by)
+					return distanceA - distanceB
+				})[0]
 		}
 		if (this.target) {
 			this.targetTime = Date.now()
@@ -136,7 +169,12 @@ export class Wolf extends Enemy {
 				this.selectedIndex
 			)
 
-			if (this.alive && this.selectedIndex !== 0) this.selectedIndex = 0
+			if (
+				this.alive &&
+				this.selectedIndex !== 0 &&
+				Date.now() >= this.lastHit + 200
+			)
+				this.selectedIndex = 0
 			// Gine.handle.handle.strokeRect(this.x, this.y, this.width, this.height)
 			// Gine.handle.handle.beginPath()
 			// Gine.handle.handle.ellipse(

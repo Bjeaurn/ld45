@@ -5,17 +5,21 @@ import { Entity } from './entity'
 import { rotateSprite, xyToDegrees } from './util'
 
 export class Player extends Entity {
+	type: 'player' = 'player'
 	image: SpriteAsset
 	isColliding: boolean = false
+	public health: number = 5
 	public stamina: number = 1
 	public hunger: number = 0.6
 	public isCarrying: number = 0
 	public isAttacking: boolean = false
+	public starvingTime: number = 0
 
 	private moveSpeed: number = 35
 	private direction: number = 0
 	private actionTime: number = 0
 	private attackDelayTime: number = 0
+	private lastHit: number = 0
 	private attackDelay: number = 600
 	private attackIsDelayed: boolean = false
 	private attackSpeed: number = 700
@@ -29,26 +33,41 @@ export class Player extends Entity {
 	}
 
 	tick(delta: number) {
-		this.hunger -= delta * 0.0005
+		this.hunger -= delta * 0.006
+		if (this.hunger < 0.2) {
+			if (this.starvingTime === 0) {
+				this.starvingTime = Date.now()
+				this.hit()
+			}
+			if (Date.now() >= this.starvingTime + 10000) {
+				this.hit()
+				this.starvingTime = Date.now()
+			}
+		}
 		if (this.actionTime > 0) {
 			this.actionTime -= delta
 		}
 		if (this.actionTime < 0) {
 			this.actionTime = 0
 		}
-		// console.log(this.stamina)
-		this.handleKeyboard(delta)
-		if (this.attackIsDelayed) {
-			if (Date.now() >= this.attackDelayTime + this.attackDelay) {
-				this.attackIsDelayed = false
-				this.attackDelayTime = 0
+		if (this.alive) {
+			this.handleKeyboard(delta)
+			if (this.attackIsDelayed) {
+				if (Date.now() >= this.attackDelayTime + this.attackDelay) {
+					this.attackIsDelayed = false
+					this.attackDelayTime = 0
+				}
 			}
-		}
 
-		if (this.attackDelayTime > 0) {
-			this.image.update()
+			if (Date.now() >= this.lastHit + 200) {
+				if (this.attackDelayTime > 0) {
+					this.image.update()
+				} else {
+					this.image.currentSpriteIndex = 0
+				}
+			}
 		} else {
-			this.image.currentSpriteIndex = 0
+			this.image.currentSpriteIndex = 8
 		}
 	}
 
@@ -77,7 +96,7 @@ export class Player extends Entity {
 		}
 		if (vector.x !== 0 || vector.y !== 0) {
 			if (this.stamina > 0) {
-				this.stamina -= delta * 0.01
+				this.stamina -= delta * 0.02
 			} else {
 				this.stamina = 0
 			}
@@ -139,8 +158,20 @@ export class Player extends Entity {
 		this.actionTime = 0.2
 	}
 
+	die() {
+		console.log('You died')
+		this.alive = false
+		this.stamina = 0
+		this.hunger = 0
+	}
+
 	hit() {
-		console.log('you have been hit')
+		this.lastHit = Date.now()
+		this.image.currentSpriteIndex = 7
+		this.health--
+		if (this.health <= 0) {
+			this.die()
+		}
 	}
 
 	carry(entity: Enemy) {

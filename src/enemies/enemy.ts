@@ -5,6 +5,7 @@ import { Entity } from '../entity'
 export class Enemy extends Entity {
 	direction: number = 0
 	lifePoints: number = 0.2
+	points: number = 0
 	ebtn: SpriteAsset
 	constructor(
 		public x: number,
