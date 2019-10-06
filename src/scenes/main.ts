@@ -167,8 +167,8 @@ export class MainScene extends Scene {
 		GUI.drawAlerts()
 		if (this.flags.get('gameWon') === true) {
 			Gine.handle.draw(Gine.store.getImage('game-completed')!, 100, 50)
-			Gine.handle.text('You scored: ' + this.calculateScore() + ' points', 100, 32 )
-			Gine.handle.text('You played for: ' + this.calculateTime() + ' seconds', 300, 32)
+			Gine.handle.text('You scored: ' + this.flags.get('totalScore') + ' points', 100, 32 )
+			Gine.handle.text('You played for: ' + this.flags.get('timePlayed') + ' seconds', 300, 32)
 		}
 		if (this.flags.get('dead') === true) {
 			Gine.handle.draw(Gine.store.getImage('game-over')!, 100, 50)
