@@ -245,7 +245,7 @@ export class MainScene extends Scene {
 
 	winTheGame() {
 		this.flags.set('gameWon', true)
-		console.log('For you speedrunners! Here are your stats!'))
+		console.log('For you speedrunners! Here are your stats!')
 		console.log('You scored: ' + this.calculateScore() + ' points')
 		console.log('You played for: ' + this.calculateTime() + ' seconds')
 		console.log('Thanks for playing! @Bjeaurn on Twitch, Twitter and more!')
